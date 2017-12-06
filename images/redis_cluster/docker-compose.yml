@@ -1,0 +1,33 @@
+version: '2'
+services:
+  master:
+    image: redis:4
+    command: redis-server --requirepass sz73go
+    ports:
+      - '7390:6379'
+    volumes:
+      - /docker/redis_master/data:/data
+
+  slave:
+    image: redis:4
+    command: redis-server --slaveof redis-master 6379 --masterauth  sz73go  --requirepass sz73go
+    ports:
+      - '7391:6379'
+    links:
+      - master:redis-master
+    volumes:
+      - /docker/redis_slave/data:/data  
+
+  sentinel:
+    image: registry.cn-shenzhen.aliyuncs.com/epipe/sentinel:auth
+    ports:
+      - '26379:26379'
+    environment:
+      - AUTH_PASS=sz73go
+      - SENTINEL_QUORUM =1
+      - SENTINEL_DOWN_AFTER=5000
+      - SENTINEL_FAILOVER=18000
+    links:
+      - master:redis-master
+      - slave
+
