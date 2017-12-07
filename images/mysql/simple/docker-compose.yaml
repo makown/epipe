@@ -1,0 +1,11 @@
+version: '3.1'
+services:
+  db:
+    image: mysql_master:5.6
+    ports:
+      - '3306:3306'
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd1234*
+    volumes:
+      - /docker/mysql/master:/var/lib/mysql

@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  mariadb-master:
+    image: 'bitnami/mariadb:latest'
+    ports:
+      - '3306:3306'
+    volumes:
+      - /docker/mysql/mariadb:/bitnami
+    environment:
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=abcd1234*
+      - MARIADB_ROOT_PASSWORD=abcd1234*
+      - MARIADB_USER=my_user
+      - MARIADB_PASSWORD=test
+      - MARIADB_DATABASE=test
+  mariadb-slave:
+    image: 'bitnami/mariadb:latest'
+    ports:
+      - '3307:3306'
+    depends_on:
+      - mariadb-master
+    environment:
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=abcd1234*
+      - MARIADB_MASTER_HOST=mariadb-master
+      - MARIADB_MASTER_PORT_NUMBER=3306
+      - MARIADB_MASTER_ROOT_PASSWORD=abcd1234*
