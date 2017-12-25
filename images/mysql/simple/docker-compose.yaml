@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   db:
-    image: mysql1214
+    image: mysql:0
     ports:
       - '3306:3306'
     restart: always
