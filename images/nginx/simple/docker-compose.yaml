@@ -1,0 +1,11 @@
+version: '2'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - '80:80'
+    restart: always
+#    volumes:
+#      - /docker/dev/nginx/vhost:/usr/local/nginx/conf/vhost
+#      - /docker/dev/nginx/data:/data
+
