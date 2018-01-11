@@ -1,0 +1,9 @@
+   <role rolename="manager-gui"/>
+   <user username="admin" password="whb2018" roles="manager-gui"/>
+
+
+   <Connector URIEncoding="utf-8" port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               maxThreads="1000"
+               acceptCount="1000"  />
