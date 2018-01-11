@@ -1,0 +1,28 @@
+tomcat7的session持久化
+1.配置Tomcat7的conf目录下的context.xml文件：
+a 单点Reids配置
+    <!-- Jedis save session-->
+    <Valve className="com.orangefunction.tomcat.redissessions.RedisSessionHandlerValve" />
+    <Manager className="com.orangefunction.tomcat.redissessions.RedisSessionManager" 
+           host="172.18.250.0"
+           port="6379"
+           database="0"
+	   maxInactiveInterval="60"/>
+
+b Sentinel集群配置：
+
+        <!-- Sentinel 配置 -->
+     <Valve className="com.orangefunction.tomcat.redissessions.RedisSessionHandlerValve" />        
+    <Manager className="com.orangefunction.tomcat.redissessions.RedisSessionManager" 
+        maxInactiveInterval="60"
+        sentinelMaster="mymaster"
+        sentinels="127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381,127.0.0.1:26382"
+        />
+
+2.添加jar 
+commons-pool-1.5.4.jar  
+commons-pool2-2.4.1.jar 
+jedis-2.6.2.jar
+tomcat-juli.jar       
+tomcat-juli-adapters.jar
+tomcat-redis-session-manager1.2.jar
