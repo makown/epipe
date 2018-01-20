@@ -1,0 +1,27 @@
+FROM   php:5.6-apache
+MAINTAINER whb <whb@163.com>
+ENV  TIME_ZONE Asia/Shanghai
+RUN echo "${TIME_ZONE}" > /etc/timezone && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime &&  apt-get update && for packages in  gcc g++ make cmake autoconf  re2c wget cron bzip2 libzip-dev libc6-dev bison file rcconf flex vim bison m4 gawk less cpp binutils diffutils unzip tar bzip2 libbz2-dev libncurses5 libncurses5-dev libtool libevent-dev openssl libssl-dev zlibc libsasl2-dev libltdl3-dev libltdl-dev zlib1g zlib1g-dev libbz2-1.0 libbz2-dev libglib2.0-0 libglib2.0-dev libpng3 libjpeg62 libjpeg62-dev libjpeg-dev libpng-dev libpng12-0 libpng12-dev libkrb5-dev curl libcurl3 libcurl3-gnutls libcurl4-gnutls-dev libcurl4-openssl-dev libpq-dev libpq5 gettext libjpeg-dev libpng12-dev libxml2-dev libcap-dev ca-certificates libc-client2007e-dev psmisc patch git libc-ares-dev libicu-dev e2fsprogs libxslt libxslt1-dev libc-client-dev xz-utils libexpat1-dev;do apt-get --no-install-recommends install -y $packages --force-yes; done &&   rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+	libfreetype6-dev \
+	libjpeg62-turbo-dev \
+	libmcrypt-dev \
+	libpng-dev \
+	&& docker-php-ext-install -j$(nproc) iconv mcrypt \
+	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+	&& docker-php-ext-install -j$(nproc) gd
+
+RUN pecl install redis-3.1.0 \
+	&& pecl install xdebug-2.5.0 \
+	&& docker-php-ext-enable redis xdebug
+
+RUN apt-get update && apt-get install -y libmemcached-dev zlib1g-dev \
+	&& pecl install memcached-2.2.0 \
+	&& docker-php-ext-enable memcached
+RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \
+	&& mkdir -p /tmp/xcache \
+	&& tar -xf xcache.tar.gz -C /tmp/xcache --strip-components=1 \
+	&& rm xcache.tar.gz \
+	&& docker-php-ext-configure /tmp/xcache --enable-xcache \
+	&& docker-php-ext-install /tmp/xcache \
+	&& rm -r /tmp/xcache
