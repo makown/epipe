@@ -1,0 +1,45 @@
+
+#/usr/bin/env bash
+fabutime=$(date+%Y%m%d)
+echo $fabutime>>/tmp/fabu.log
+source=/tmp/fabu
+app1=service-bootstrap
+dst1=/home/epipe/service-tomcat
+app2=member
+dst2=/home/epipe/member-tomcat
+app3=web-mgt
+dst3=/home/epipe/tomcat/apache-tomcat-7.0.61
+backup_dir=/tmp/backup
+#stop tomcat
+ps -ef |grep tomcat |grep -v grep | awk '{print $2}' |xargs kill -9
+
+#api
+if [ ];then
+	cd $dst1/webapps
+	rm -rf $app1*
+	cp $source/$app1.war  $dst1/webapps/
+	echo "$app1 is ok"
+	echo "$app1 is ok">>/tmp/fabu.log
+fi
+
+#member
+cd $dst2/webapps
+rm -rf $app2*
+cp $source/$app2.war $dst2/webapps/
+echo "$app2 is ok"
+echo "$app2 is ok">>/tmp/fabu.log
+
+#web-mgmt
+cd $dst3/webapps
+rm -rf $app3*
+cp $source/$app3.war $dst3/webapps/
+echo "$app3 is ok"
+echo "$app3 is ok">>/tmp/fabu.log
+#start app
+$dst1/bin/startup.sh
+$dst2/bin/startup.sh
+$dst3/bin/startup.sh
+
+#backup 
+mkdir -p $backup_dir/$fabutime
+mv $source/*   $backup_dir/$fabutime
