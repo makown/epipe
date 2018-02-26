@@ -75,3 +75,9 @@ ADD lib  /usr/local/tomcat/lib/
 EXPOSE 8080
 CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]
 #docker push  registry.cn-shenzhen.aliyuncs.com/whb/tomcat7:jdk_1.7.0.45_session
+
+FROM  mysql:5.6
+MAINTAINER whb
+RUN  ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ADD  my.cnf /etc/mysql/conf.d/
+#registry.cn-shenzhen.aliyuncs.com/epipe/mysql:5.6
