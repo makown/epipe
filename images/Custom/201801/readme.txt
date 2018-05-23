@@ -110,3 +110,8 @@ COPY sentinel-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/sentinel-entrypoint.sh
 ENTRYPOINT ["sentinel-entrypoint.sh"]
 #registry.cn-shenzhen.aliyuncs.com/whb/sentinel
+
+常用镜像列表 
+docker.elastic.co elk官网
+registry.cn-shenzhen.aliyuncs.com/kye/elasticsearch-platinum:6.2.4
+registry.cn-shenzhen.aliyuncs.com/kye/elasticsearch:6.2.4
