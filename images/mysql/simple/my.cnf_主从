@@ -1,3 +1,171 @@
+[client]
+default-character-set = utf8mb4
+port        = 3306
+socket      = /tmp/mysql.sock
+
+[mysqld]
+server-id   = 1
+skip-name-resolve
+table_open_cache = 8000
+#skip-grant-tables
+#skip-networking
+#explicit_defaults_for_timestamp=1
+port        = 3306
+socket      = /tmp/mysql.sock
+tmpdir = /tmp
+basedir = /usr/local/mysql
+datadir = /usr/local/mysql/data
+innodb_log_group_home_dir = /usr/local/mysql/data
+
+
+# character set
+##########################
 character-set-server = utf8mb4 
 collation-server = utf8mb4_general_ci
+
+#gtid mode
+enforce-gtid-consistency = ON
+gtid-mode = ON
+
+########semi sync replication settings########
+plugin_dir=/usr/local/mysql/lib/plugin
+plugin_load = "rpl_semi_sync_master=semisync_master.so;rpl_semi_sync_slave=semisync_slave.so"
+loose_rpl_semi_sync_master_enabled = 1
+loose_rpl_semi_sync_slave_enabled = 1
+loose_rpl_semi_sync_master_timeout = 10000
+
+# password
+##########################
+#validate_password_length=4         
+#validate_password_mixed_case_count=0
+#validate_password_number_count=0
+#validate_password_policy=0
+#validate_password_special_char_count=0
+
+# bin-log 
+log-bin=mysql-bin
+binlog_format=mixed
+sync_binlog = 1
+expire_logs_days =7
+binlog_cache_size = 128m
+max_binlog_cache_size =512m
+max_binlog_size =256M
+
+binlog_ignore_db=mysql
+binlog_ignore_db=information_schema
+binlog_ignore_db=performation_schema
+binlog_ignore_db=sys
+
+# log relay
+##########################
+relay_log = mysql-relay-bin
+relay_log_purge = on
+relay_log_recovery = on
+max_relay_log_size = 1G
+
+# log error
+##########################
+log_error = /usr/local/mysql/data/mysqld_error.log
+
+# log slow
+##########################
+slow_query_log = on
+slow_query_log_file = /usr/local/mysql/data/mysqld_slow.log
+long_query_time = 2
+log_queries_not_using_indexes = on
+
+# log general
+##########################
+general_log = on
+general_log_file = /usr/local/mysql/data/mysqld_gener.log
+
+# time out
+##########################
+connect_timeout = 20
+wait_timeout = 86400
+
+
+# connection
+##########################
+max_connections = 2000
+max_user_connections = 1900
+max_connect_errors = 100000
+max_allowed_packet = 1G
+
 lower-case-table-names = 1
+skip-external-locking
+key_buffer_size = 32M
+max_allowed_packet = 20M
+table_open_cache = 128
+sort_buffer_size = 768K
+net_buffer_length = 8K
+read_buffer_size = 768K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+thread_cache_size = 16
+query_cache_size = 16M
+tmp_table_size = 32M
+performance_schema_max_table_instances = 1000
+
+explicit_defaults_for_timestamp = true
+#skip-networking
+max_connections = 500
+max_connect_errors = 100
+open_files_limit = 65535
+sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+expire_logs_days = 10
+
+#loose-innodb-trx=0
+#loose-innodb-locks=0
+#loose-innodb-lock-waits=0
+#loose-innodb-cmp=0
+#loose-innodb-cmp-per-index=0
+#loose-innodb-cmp-per-index-reset=0
+#loose-innodb-cmp-reset=0
+#loose-innodb-cmpmem=0
+#loose-innodb-cmpmem-reset=0
+#loose-innodb-buffer-page=0
+#loose-innodb-buffer-page-lru=0
+#loose-innodb-buffer-pool-stats=0
+#loose-innodb-metrics=0
+#loose-innodb-ft-default-stopword=0
+#loose-innodb-ft-inserted=0
+#loose-innodb-ft-deleted=0
+#loose-innodb-ft-being-deleted=0
+#loose-innodb-ft-config=0
+#loose-innodb-ft-index-cache=0
+#loose-innodb-ft-index-table=0
+#loose-innodb-sys-tables=0
+#loose-innodb-sys-tablestats=0
+#loose-innodb-sys-indexes=0
+#loose-innodb-sys-columns=0
+#loose-innodb-sys-fields=0
+#loose-innodb-sys-foreign=0
+#loose-innodb-sys-foreign-cols=0
+
+default_storage_engine = InnoDB
+innodb_file_per_table = 1
+innodb_data_home_dir = /usr/local/mysql/data 
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_buffer_pool_size = 128M
+innodb_log_file_size = 32M
+innodb_log_buffer_size = 8M
+innodb_flush_log_at_trx_commit = 1
+innodb_lock_wait_timeout = 50
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+default-character-set = utf8mb4
+
+#[myisamchk]
+#key_buffer_size = 32M
+#sort_buffer_size = 768K
+#read_buffer = 2M
+#write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
