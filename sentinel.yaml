@@ -1,0 +1,36 @@
+version: '3'
+services:
+  master:
+    image: registry.cn-shenzhen.aliyuncs.com/whb/redis:4-alpine
+    container_name: redis-master
+    restart: always
+    command: redis-server --requirepass divi2020
+    ports:
+      - '7311:6379'
+    volumes:
+      - ./redis_master/data:/data
+  slave01:
+    image: registry.cn-shenzhen.aliyuncs.com/whb/redis:4-alpine
+    container_name: slave01
+    restart: always
+    command: redis-server --slaveof redis_master 6379 --masterauth  divi2020  --requirepass divi2020
+    ports:
+      - '7312:6379'
+    links:
+      - master:redis_master
+    volumes:
+      - ./redis_slave/data:/data  
+  
+  sentinel:
+    image: registry.cn-shenzhen.aliyuncs.com/whb/sentinel:4-alpine
+    restart: always
+    ports:
+      - '26379:26379'
+    environment:
+      - AUTH_PASS=divi2020
+      - SENTINEL_QUORUM=1
+      - SENTINEL_DOWN_AFTER=5000
+      - SENTINEL_FAILOVER=18000
+    links:
+      - master:redis-master
+      - slave01
